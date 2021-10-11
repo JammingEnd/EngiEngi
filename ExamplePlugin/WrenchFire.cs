@@ -1,48 +1,60 @@
 ﻿using EntityStates;
 using RoR2;
+using RoR2.Projectile;
 using UnityEngine;
 
 namespace EngiEngi.MyEntityStates
 {
     public class WrenchFire : BaseSkillState
     {
-        public float baseDuration = 0.5f;
+        public static float damageCoefficient = 16f;
+        public static float procCoefficient = 1f;
+        public static float baseDuration = 0.65f;
+        public static float throwForce = 80f;
+
         private float duration;
-        public GameObject effectPrefab = Resources.Load<GameObject>("prefabs/effects/impacteffects/Hitspark");
-        public GameObject hitEffectPrefab = Resources.Load<GameObject>("prefabs/effects/impacteffects/critspark");
-        public GameObject tracerEffectPrefab = Resources.Load<GameObject>("prefabs/effects/tracers/tracerbanditshotgun");
+        private float fireTime;
+        private bool hasFired;
+        private Animator animator;
         public override void OnEnter()
         {
             base.OnEnter();
-            this.duration = this.baseDuration / base.attackSpeedStat;
-            Ray aimRay = base.GetAimRay();
-            base.StartAimMode(aimRay, 2f, false);
-            base.PlayAnimation("Gesture, Override", "FireShotgun", "FireShotgun.playbackRate", this.duration * 1.1f);
-            if (base.isAuthority)
+            this.duration = WrenchFire.baseDuration / this.attackSpeedStat;
+            this.fireTime = 0.2f * this.duration;
+            base.characterBody.SetAimTimer(2f);
+            this.animator = base.GetModelAnimator();
+
+          //  base.PlayAnimation("Gesture, Override", "WrenchFire", "WrenchFire.playbackRate", this.duration);
+        }
+        private void Fire()
+        {
+            if (!this.hasFired)
             {
-                new BulletAttack
+                this.hasFired = true;
+                //play sound
+
+                if (base.isAuthority)
                 {
-                    owner = base.gameObject,
-                    weapon = base.gameObject,
-                    origin = aimRay.origin,
-                    aimVector = aimRay.direction,
-                    minSpread = 0f,
-                    maxSpread = base.characterBody.spreadBloomAngle,
-                    bulletCount = 1U,
-                    procCoefficient = 1f,
-                    damage = base.characterBody.damage,
-                    force = 3,
-                    falloffModel = BulletAttack.FalloffModel.DefaultBullet,
-                    tracerEffectPrefab = this.tracerEffectPrefab,
-                    hitEffectPrefab = this.hitEffectPrefab,
-                    isCrit = base.RollCrit(),
-                    HitEffectNormal = false,
-                    stopperMask = LayerIndex.world.mask,
-                    smartCollision = true,
-                    maxDistance = 300f
-                }.Fire();
+                    Ray dirRay = base.GetAimRay();
+
+                    ProjectileManager.instance.FireProjectile(EngiEgni.Modules.WrenchProjectile.wrenchPrefab,
+                    dirRay.origin,
+                    Util.QuaternionSafeLookRotation(dirRay.direction),
+                    base.gameObject,
+                    WrenchFire.damageCoefficient * this.damageStat,
+                    4000f, 
+                    base.RollCrit(), 
+                    DamageColorIndex.Default, 
+                    null, 
+                    WrenchFire.throwForce);
+
+
+                }
             }
         }
+
+
+
         public override void OnExit()
         {
             base.OnExit();
@@ -50,6 +62,10 @@ namespace EngiEngi.MyEntityStates
         public override void FixedUpdate()
         {
             base.FixedUpdate();
+            if (base.fixedAge >= this.fireTime)
+            {
+                this.Fire();
+            }
             if (base.fixedAge >= this.duration && base.isAuthority)
             {
                 this.outer.SetNextStateToMain();
