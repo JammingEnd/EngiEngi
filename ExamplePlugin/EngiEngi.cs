@@ -105,6 +105,23 @@ namespace EngiEngi
             //    unlockableName = "",
             //    viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             //};
+
+            On.RoR2.CharacterMaster.AddDeployable += AddBATComponentOnAddDeployableHook;
+            
+
+            
+        }
+
+      
+
+        private static void AddBATComponentOnAddDeployableHook(On.RoR2.CharacterMaster.orig_AddDeployable orig, CharacterMaster self, Deployable deployable, DeployableSlot slot)
+        {
+            orig(self, deployable, slot);
+
+            if (slot == DeployableSlot.EngiTurret)
+            {
+                var badAssTurret = deployable.gameObject.AddComponent<MyCustomTurret>();
+            }
         }
     }
 }
