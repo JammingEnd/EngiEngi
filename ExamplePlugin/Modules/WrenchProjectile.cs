@@ -38,7 +38,10 @@ namespace EngiEgni.Modules
             float projDamage = 15;
            
             ProjectileImpactInfo whatIHit = new ProjectileImpactInfo();
-            
+            if (whatIHit.collider.gameObject.GetComponent<UpgradeTurretComp>() != null)
+            {
+               
+            }
             
          
             if (whatIHit.collider.GetComponent<HealthComponent>().shield > 0)

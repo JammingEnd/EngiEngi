@@ -120,7 +120,7 @@ namespace EngiEngi
 
             if (slot == DeployableSlot.EngiTurret)
             {
-                var badAssTurret = deployable.gameObject.AddComponent<MyCustomTurret>();
+                var badAssTurret = deployable.gameObject.AddComponent(typeof(EngiEgni.Modules.UpgradeTurretComp));
             }
         }
     }

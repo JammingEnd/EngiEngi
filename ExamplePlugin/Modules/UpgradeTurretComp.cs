@@ -8,21 +8,7 @@ namespace EngiEgni.Modules
 {
     class UpgradeTurretComp
     {
-        public float buffDegenCooldown = 2f;
-
-        private int currentBuffsStack;
-
-        public void addStack()
-        {
-
-        }
         
-        IEnumerator CoolDownUpdater()
-        {
-            yield return new WaitForSeconds(buffDegenCooldown);
-            currentBuffsStack--;
-
-        }
         
     }
 }
