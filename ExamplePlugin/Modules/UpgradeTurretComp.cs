@@ -46,7 +46,7 @@ namespace EngiEgni.Modules
         public void addBuffAndUpdateInt()
         {
             thisTotalBuffStacks++;
-           // thisTurret.AddBuff();
+            thisTurret.AddBuff(Buffs.enhancementBuff);
         }
         private void UpgradeTurret(int tier)
         {

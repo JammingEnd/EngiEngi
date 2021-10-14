@@ -30,7 +30,7 @@ namespace EngiEgni.Modules
 
             if (slot == DeployableSlot.EngiTurret)
             {
-               // var badAssTurret = deployable.gameObject.AddComponent<MyCustomTurret>();
+               var badAssTurret = deployable.gameObject.AddComponent<UpgradeTurretComp>();
             }
         }
         private static void StartImpactEvent(ProjectileSingleTargetImpact projectileImpactEvent)
