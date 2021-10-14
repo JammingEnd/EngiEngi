@@ -40,7 +40,8 @@ namespace EngiEgni.Modules
             ProjectileImpactInfo whatIHit = new ProjectileImpactInfo();
             if (whatIHit.collider.gameObject.GetComponent<UpgradeTurretComp>() != null)
             {
-               
+                UpgradeTurretComp addStack = whatIHit.collider.gameObject.GetComponent<UpgradeTurretComp>();
+                addStack.addBuffAndUpdateInt();
             }
             
          
