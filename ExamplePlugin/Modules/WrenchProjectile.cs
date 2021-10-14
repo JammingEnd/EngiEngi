@@ -14,7 +14,7 @@ namespace EngiEgni.Modules
 
         internal static void CreateProjectile()
         {
-
+            CreateWrench();
         }
 
         private static void CreateWrench()
@@ -22,7 +22,10 @@ namespace EngiEgni.Modules
             wrenchPrefab = ClonePrefab("CommandoGrenadeProjectile", "EngineerWrench"); //add prefab
 
             ProjectileSingleTargetImpact wrenchImpact = wrenchPrefab.GetComponent<ProjectileSingleTargetImpact>();
+          
+           
             StartImpactEvent(wrenchImpact);
+          
         }
         private static void AddBATComponentOnAddDeployableHook(On.RoR2.CharacterMaster.orig_AddDeployable orig, CharacterMaster self, Deployable deployable, DeployableSlot slot)
         {
@@ -33,6 +36,9 @@ namespace EngiEgni.Modules
                var badAssTurret = deployable.gameObject.AddComponent<UpgradeTurretComp>();
             }
         }
+        
+
+
         private static void StartImpactEvent(ProjectileSingleTargetImpact projectileImpactEvent)
         {
             float projDamage = 15;
