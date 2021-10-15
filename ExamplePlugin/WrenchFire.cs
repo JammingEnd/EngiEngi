@@ -20,7 +20,7 @@ namespace EngiEngi.MyEntityStates
         {
             base.OnEnter();
             this.duration = WrenchFire.baseDuration / this.attackSpeedStat;
-            this.fireTime = 0.2f * this.duration;
+            this.fireTime = 0.1f * this.duration;
             base.characterBody.SetAimTimer(2f);
             this.animator = base.GetModelAnimator();
 
@@ -48,7 +48,7 @@ namespace EngiEngi.MyEntityStates
                     null, 
                     WrenchFire.throwForce);
 
-
+                   
                 }
             }
         }

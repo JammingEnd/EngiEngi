@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using EntityStates;
 using RoR2;
+using RoR2.Social;
 using RoR2.Projectile;
 
 
@@ -20,6 +21,7 @@ namespace EngiEgni.Modules
 
         public int thisTotalBuffStacks;
         public int requiredStacksTier2, requiredStacksTier3;
+        int maxtstacks;
 
         private int turretTier;
 
@@ -54,26 +56,48 @@ namespace EngiEgni.Modules
         }
         private void Update()
         {
-            if(this.thisTotalBuffStacks >= requiredStacksTier2)
+           
+
+            if(thisTotalBuffStacks >= requiredStacksTier2)
             {
                 UpgradeTurret(turretTier);
             }
         }
         public void addBuffAndUpdateInt()
         {
-            thisTotalBuffStacks++;
-            thisTurret.AddBuff(Buffs.enhancementBuff);
+            Chat.AddMessage("ping");
+
+            if (turretTier == 1)
+            {
+                maxtstacks = requiredStacksTier2 + 1;
+            }
+            if(turretTier == 2)
+            {
+                maxtstacks = requiredStacksTier3 + 1;
+            }
+            else
+            {
+                maxtstacks = 0;
+            }
+            if(turretTier < 3)
+            {
+                thisTotalBuffStacks++;
+
+            }
+            // thisTurret.AddTimedBuff(Buffs.enhancementBuff, 2, maxtstacks);
         }
         private void UpgradeTurret(int tier)
         {
+            Chat.AddMessage($"Turret Upgraded to tier { tier }");
             if(turretTier == 2)
             {
                 thisTurret.baseDamage *= damageIncrease;
                 thisTurret.baseAttackSpeed *= fireRIncrease;
                 thisTurret.baseRegen *= regenIncrease;
                 thisTurret.radius *= rangeIncrease;
-                
+
                 //boss damage increase
+                thisTotalBuffStacks = 0;
             }
             if(turretTier == 3)
             {
@@ -83,6 +107,7 @@ namespace EngiEgni.Modules
                 //projectile.projectileController.procCoefficient *= procChanceIncrease;
                 //increased proc chance
                 //crit damage incr
+                thisTotalBuffStacks = 0;
 
             }
         }

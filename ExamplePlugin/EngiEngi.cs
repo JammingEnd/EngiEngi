@@ -1,10 +1,10 @@
-using System;
 using BepInEx;
 using EntityStates;
 using R2API;
 using R2API.Utils;
 using RoR2;
 using RoR2.Skills;
+using System;
 using UnityEngine;
 
 namespace EngiEngi
@@ -22,11 +22,11 @@ namespace EngiEngi
             // myCharacter should either be
             // Resources.Load<GameObject>("prefabs/characterbodies/BanditBody");
             // or BodyCatalog.FindBodyIndex("BanditBody");
-            var myCharacter = Resources.Load<GameObject>("prefabs/characterbodies/Engi");
+            var myCharacter = Resources.Load<GameObject>("prefabs/characterbodies/EngiBody");
             var skillLocator = myCharacter.GetComponent<SkillLocator>();
             // If you're confused about the language tokens, they're the proper way to add any strings used by the game.
             // We use LanguageAPI for that
-            LanguageAPI.Add("MTENGI_DESCRIPTION", "this is engineer, i solve problems" + Environment.NewLine);
+           /* LanguageAPI.Add("MYENGI_DESCRIPTION", "this is engineer, i solve problems" + Environment.NewLine);
 
             var mySurvivorDef = new SurvivorDef
             {
@@ -34,7 +34,7 @@ namespace EngiEngi
                 bodyPrefab = myCharacter,
                 //Description
                 descriptionToken = "MYENGI_DESCRIPTION",
-                //Display 
+                //Display
                 displayPrefab = Resources.Load<GameObject>("Prefabs/Characters/EngiDisplay"),
                 //Color on select screen
                 primaryColor = new Color(0.8039216f, 0.482352942f, 0.843137264f),
@@ -42,7 +42,7 @@ namespace EngiEngi
                 unlockableName = "Engineer",
             };
             SurvivorAPI.AddSurvivor(mySurvivorDef);
-
+           */
             LanguageAPI.Add("CHARACTERNAME_SKILLSLOT_SKILLNAME_NAME", "Wrench");
             LanguageAPI.Add("CHARACTERNAME_SKILLSLOT_SKILLNAME_DESCRIPTION", "fires wrenches that deal increased damage to shield and are able to upgrade your turret.");
 
@@ -55,39 +55,25 @@ namespace EngiEngi
             mySkillDef.canceledFromSprinting = true;
             mySkillDef.fullRestockOnAssign = true;
             mySkillDef.interruptPriority = InterruptPriority.Any;
-           // mySkillDef.is = true;
+            // mySkillDef.is = true;
             mySkillDef.isCombatSkill = false;
             mySkillDef.mustKeyPress = false;
             mySkillDef.canceledFromSprinting = true;
             mySkillDef.rechargeStock = 1;
             mySkillDef.requiredStock = 1;
-          //  mySkillDef.shootDelay = 0.5f;
+            //  mySkillDef.shootDelay = 0.5f;
             mySkillDef.stockToConsume = 1;
-            mySkillDef.icon = Resources.Load<Sprite>("NotAnActualPath");
+            // mySkillDef.icon = Resources.Load<Sprite>("NotAnActualPath");
             mySkillDef.skillDescriptionToken = "fire wrenches that deal increased damage to shields";
-            mySkillDef.skillName = "Wrench";
+            mySkillDef.skillName = "WrenchSkill";
             mySkillDef.skillNameToken = "Wrench";
 
             LoadoutAPI.AddSkillDef(mySkillDef);
-            //This adds our skilldef. If you don't do this, the skill will not work.
-
-           ;
-
-            //Note; if your character does not originally have a skill family for this, use the following:
-            //skillLocator.special = gameObject.AddComponent<GenericSkill>();
-            //var newFamily = ScriptableObject.CreateInstance<SkillFamily>();
-            //LoadoutAPI.AddSkillFamily(newFamily);
-            //skillLocator.special.SetFieldValue("_skillFamily", newFamily);
-            //var specialSkillFamily = skillLocator.special.skillFamily;
-
-
-
-
 
             //If this is an alternate skill, use this code.
             //Note; you can change component.primary to component.secondary , component.utility and component.special
             // Here, we add our skill as a variant to the exisiting Skill Family.
-       
+
             var skillFamily1 = skillLocator.primary.skillFamily;
             Array.Resize(ref skillFamily1.variants, skillFamily1.variants.Length + 1);
             skillFamily1.variants[skillFamily1.variants.Length - 1] = new SkillFamily.Variant
@@ -95,8 +81,15 @@ namespace EngiEngi
                 skillDef = mySkillDef,
                 unlockableName = "Wrench!",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
-
             };
+            //This adds our skilldef. If you don't do this, the skill will not work.
+
+            //Note; if your character does not originally have a skill family for this, use the following:
+            //skillLocator.special = gameObject.AddComponent<GenericSkill>();
+            //var newFamily = ScriptableObject.CreateInstance<SkillFamily>();
+            //LoadoutAPI.AddSkillFamily(newFamily);
+            //skillLocator.special.SetFieldValue("_skillFamily", newFamily);
+            //var specialSkillFamily = skillLocator.special.skillFamily;
 
             //Note; if your character does not originally have a skill family for this, use the following:
             //skillFamily.variants = new SkillFamily.Variant[1]; // substitute 1 for the number of skill variants you are implementing
@@ -109,13 +102,9 @@ namespace EngiEngi
             //    viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             //};
 
-            On.RoR2.CharacterMaster.AddDeployable += AddBATComponentOnAddDeployableHook;
-            
-
-            
+            //On.RoR2.CharacterMaster.AddDeployable += AddBATComponentOnAddDeployableHook;
+            EngiEgni.Modules.WrenchProjectile.CreateProjectile();
         }
-
-      
 
         private static void AddBATComponentOnAddDeployableHook(On.RoR2.CharacterMaster.orig_AddDeployable orig, CharacterMaster self, Deployable deployable, DeployableSlot slot)
         {
@@ -123,7 +112,8 @@ namespace EngiEngi
 
             if (slot == DeployableSlot.EngiTurret)
             {
-                var badAssTurret = deployable.gameObject.AddComponent(typeof(EngiEgni.Modules.UpgradeTurretComp));
+               var Engiturret = deployable.gameObject.AddComponent(typeof(EngiEgni.Modules.UpgradeTurretComp));
+                
             }
         }
     }

@@ -1,8 +1,8 @@
 ﻿using R2API;
 using RoR2;
-using UnityEngine.Networking;
 using RoR2.Projectile;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace EngiEgni.Modules
 {
@@ -18,27 +18,31 @@ namespace EngiEgni.Modules
         private static void CreateWrench()
         {
             wrenchPrefab = ClonePrefab("CommandoGrenadeProjectile", "EngineerWrench"); //add prefab
+            Object.Destroy(wrenchPrefab.GetComponent<ProjectileExplosion>());
+            wrenchPrefab.AddComponent<ProjectileImpactEventCaller>();
             wrenchPrefab.AddComponent<ProjectileSingleTargetImpact>();
+
             if (NetworkServer.active)
             {
                 var impactEventCaller = wrenchPrefab.GetComponent<ProjectileImpactEventCaller>();
-                if ((bool)impactEventCaller)
+                if (impactEventCaller)
                 {
                     impactEventCaller.impactEvent.AddListener(OnImpactListener);
+
                 }
             }
         }
 
         private static void OnImpactListener(ProjectileImpactInfo whatIHit)
         {
-
             var projectileDamage = wrenchPrefab.GetComponent<ProjectileDamage>();
 
-            float projDamage = 15;
-          
+            float projDamage = 2;
+
             if (whatIHit.collider.gameObject.GetComponent<UpgradeTurretComp>() != null)
             {
                 UpgradeTurretComp addStack = whatIHit.collider.gameObject.GetComponent<UpgradeTurretComp>();
+
                 addStack.addBuffAndUpdateInt();
             }
             if (whatIHit.collider.GetComponent<HealthComponent>())
@@ -54,24 +58,8 @@ namespace EngiEgni.Modules
             }
 
             projectileDamage.damage *= projDamage;
-           
+
             projectileDamage.damageType = DamageType.Generic;
-
-
-        }
-
-        private static void AddBATComponentOnAddDeployableHook(On.RoR2.CharacterMaster.orig_AddDeployable orig, CharacterMaster self, Deployable deployable, DeployableSlot slot)
-        {
-            orig(self, deployable, slot);
-
-            if (slot == DeployableSlot.EngiTurret)
-            {
-                var badAssTurret = deployable.gameObject.AddComponent<UpgradeTurretComp>();
-            }
-        }
-
-        private static void StartImpactEvent()
-        {
         }
 
         private static GameObject ClonePrefab(string prefabName, string newPrefabName)

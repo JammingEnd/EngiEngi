@@ -26,7 +26,7 @@ namespace EngiEgni.Modules
             buffDef.isDebuff = isDebuff;
             buffDef.eliteDef = null;
             buffDef.iconSprite = buffIcon;
-
+           
             buffDefs.Add(buffDef);
 
             return buffDef;
