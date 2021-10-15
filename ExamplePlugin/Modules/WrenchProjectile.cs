@@ -18,7 +18,7 @@ namespace EngiEgni.Modules
         private static void CreateWrench()
         {
             wrenchPrefab = ClonePrefab("CommandoGrenadeProjectile", "EngineerWrench"); //add prefab
-            
+            wrenchPrefab.AddComponent<ProjectileSingleTargetImpact>();
             if (NetworkServer.active)
             {
                 var impactEventCaller = wrenchPrefab.GetComponent<ProjectileImpactEventCaller>();
@@ -32,7 +32,7 @@ namespace EngiEgni.Modules
         private static void OnImpactListener(ProjectileImpactInfo whatIHit)
         {
 
-            var projectileImpactEvent = wrenchPrefab.GetComponent<ProjectileSingleTargetImpact>();
+            var projectileDamage = wrenchPrefab.GetComponent<ProjectileDamage>();
 
             float projDamage = 15;
           
@@ -52,12 +52,12 @@ namespace EngiEgni.Modules
                     projDamage = 0.5f;
                 }
             }
-            
 
-            projectileImpactEvent.projectileDamage.damage = projDamage;
-            projectileImpactEvent.projectileDamage.crit = false;
-            projectileImpactEvent.projectileDamage.force = 2;
-            projectileImpactEvent.projectileDamage.damageType = DamageType.Generic;
+            projectileDamage.damage *= projDamage;
+           
+            projectileDamage.damageType = DamageType.Generic;
+
+
         }
 
         private static void AddBATComponentOnAddDeployableHook(On.RoR2.CharacterMaster.orig_AddDeployable orig, CharacterMaster self, Deployable deployable, DeployableSlot slot)
