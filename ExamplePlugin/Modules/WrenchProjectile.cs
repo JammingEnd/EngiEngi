@@ -1,6 +1,6 @@
 ﻿using R2API;
 using RoR2;
-
+using UnityEngine.Networking;
 using RoR2.Projectile;
 using UnityEngine;
 
@@ -18,14 +18,21 @@ namespace EngiEgni.Modules
         private static void CreateWrench()
         {
             wrenchPrefab = ClonePrefab("CommandoGrenadeProjectile", "EngineerWrench"); //add prefab
-
-            On.RoR2.Projectile.ProjectileImpactEventCaller.OnProjectileImpact += ProjectileImpactEventCaller_OnProjectileImpact;
+            
+            if (NetworkServer.active)
+            {
+                var impactEventCaller = wrenchPrefab.GetComponent<ProjectileImpactEventCaller>();
+                if ((bool)impactEventCaller)
+                {
+                    impactEventCaller.impactEvent.AddListener(OnImpactListener);
+                }
+            }
         }
 
-        private static void ProjectileImpactEventCaller_OnProjectileImpact(On.RoR2.Projectile.ProjectileImpactEventCaller.orig_OnProjectileImpact orig, ProjectileImpactEventCaller self, ProjectileImpactInfo whatIHit)
+        private static void OnImpactListener(ProjectileImpactInfo whatIHit)
         {
-            orig(self, whatIHit);
-            ProjectileSingleTargetImpact projectileImpactEvent = self.GetComponent<ProjectileSingleTargetImpact>();
+
+            var projectileImpactEvent = wrenchPrefab.GetComponent<ProjectileSingleTargetImpact>();
 
             float projDamage = 15;
           
