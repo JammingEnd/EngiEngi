@@ -12,7 +12,7 @@ namespace EngiEngi
     [BepInDependency("com.bepis.r2api")]
     [BepInPlugin(
         "com.JammingEnd.EngiEngi",
-        "EngiEngi",
+        "EngiestEngineer",
         "1.0.0")]
     [R2APISubmoduleDependency(nameof(LoadoutAPI), nameof(SurvivorAPI), nameof(LanguageAPI))]
     public class AdditionalSkill : BaseUnityPlugin
@@ -23,28 +23,28 @@ namespace EngiEngi
             // Resources.Load<GameObject>("prefabs/characterbodies/BanditBody");
             // or BodyCatalog.FindBodyIndex("BanditBody");
             var myCharacter = Resources.Load<GameObject>("prefabs/characterbodies/Engi");
-
+            var skillLocator = myCharacter.GetComponent<SkillLocator>();
             // If you're confused about the language tokens, they're the proper way to add any strings used by the game.
             // We use LanguageAPI for that
-            LanguageAPI.Add("MYBANDIT_DESCRIPTION", "The description of my survivor" + Environment.NewLine);
+            LanguageAPI.Add("MTENGI_DESCRIPTION", "this is engineer, i solve problems" + Environment.NewLine);
 
             var mySurvivorDef = new SurvivorDef
             {
                 //We're finding the body prefab here,
                 bodyPrefab = myCharacter,
                 //Description
-                descriptionToken = "MYBANDIT_DESCRIPTION",
+                descriptionToken = "MYENGI_DESCRIPTION",
                 //Display 
-                displayPrefab = Resources.Load<GameObject>("Prefabs/Characters/BanditDisplay"),
+                displayPrefab = Resources.Load<GameObject>("Prefabs/Characters/EngiDisplay"),
                 //Color on select screen
                 primaryColor = new Color(0.8039216f, 0.482352942f, 0.843137264f),
                 //Unlockable name
-                unlockableName = "",
+                unlockableName = "Engineer",
             };
             SurvivorAPI.AddSurvivor(mySurvivorDef);
 
-            LanguageAPI.Add("CHARACTERNAME_SKILLSLOT_SKILLNAME_NAME", "The name of this skill");
-            LanguageAPI.Add("CHARACTERNAME_SKILLSLOT_SKILLNAME_DESCRIPTION", "The description of this skill.");
+            LanguageAPI.Add("CHARACTERNAME_SKILLSLOT_SKILLNAME_NAME", "Wrench");
+            LanguageAPI.Add("CHARACTERNAME_SKILLSLOT_SKILLNAME_DESCRIPTION", "fires wrenches that deal increased damage to shield and are able to upgrade your turret.");
 
             var mySkillDef = ScriptableObject.CreateInstance<SkillDef>();
             mySkillDef.activationState = new SerializableEntityStateType(typeof(EngiEngi.MyEntityStates.WrenchFire));
@@ -71,7 +71,7 @@ namespace EngiEngi
             LoadoutAPI.AddSkillDef(mySkillDef);
             //This adds our skilldef. If you don't do this, the skill will not work.
 
-            var skillLocator = myCharacter.GetComponent<SkillLocator>();
+           ;
 
             //Note; if your character does not originally have a skill family for this, use the following:
             //skillLocator.special = gameObject.AddComponent<GenericSkill>();
@@ -81,16 +81,19 @@ namespace EngiEngi
             //var specialSkillFamily = skillLocator.special.skillFamily;
 
 
-            //Note; you can change component.primary to component.secondary , component.utility and component.special
-            var skillFamily = skillLocator.primary.skillFamily;
+
+
 
             //If this is an alternate skill, use this code.
+            //Note; you can change component.primary to component.secondary , component.utility and component.special
             // Here, we add our skill as a variant to the exisiting Skill Family.
-            Array.Resize(ref skillFamily.variants, skillFamily.variants.Length + 1);
-            skillFamily.variants[skillFamily.variants.Length - 1] = new SkillFamily.Variant
+       
+            var skillFamily1 = skillLocator.primary.skillFamily;
+            Array.Resize(ref skillFamily1.variants, skillFamily1.variants.Length + 1);
+            skillFamily1.variants[skillFamily1.variants.Length - 1] = new SkillFamily.Variant
             {
                 skillDef = mySkillDef,
-                unlockableName = "",
+                unlockableName = "Wrench!",
                 viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
 
             };

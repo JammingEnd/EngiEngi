@@ -28,21 +28,24 @@ namespace EngiEgni.Modules
             ProjectileSingleTargetImpact projectileImpactEvent = self.GetComponent<ProjectileSingleTargetImpact>();
 
             float projDamage = 15;
-
+          
             if (whatIHit.collider.gameObject.GetComponent<UpgradeTurretComp>() != null)
             {
                 UpgradeTurretComp addStack = whatIHit.collider.gameObject.GetComponent<UpgradeTurretComp>();
                 addStack.addBuffAndUpdateInt();
             }
-
-            if (whatIHit.collider.GetComponent<HealthComponent>().shield > 0)
+            if (whatIHit.collider.GetComponent<HealthComponent>())
             {
-                projDamage = 0.75f;
+                if (whatIHit.collider.GetComponent<HealthComponent>().shield > 0)
+                {
+                    projDamage = 0.75f;
+                }
+                else
+                {
+                    projDamage = 0.5f;
+                }
             }
-            else
-            {
-                projDamage = 0.5f;
-            }
+            
 
             projectileImpactEvent.projectileDamage.damage = projDamage;
             projectileImpactEvent.projectileDamage.crit = false;
