@@ -4,6 +4,7 @@ using R2API;
 using R2API.Utils;
 using RoR2;
 using RoR2.Skills;
+using BepInEx.Logging;
 using System;
 using UnityEngine;
 
@@ -17,8 +18,12 @@ namespace EngiEngi
     [R2APISubmoduleDependency(nameof(LoadoutAPI), nameof(SurvivorAPI), nameof(LanguageAPI))]
     public class AdditionalSkill : BaseUnityPlugin
     {
+        public static ManualLogSource logger;
+
         public void Awake()
         {
+            logger = base.Logger;
+
             // myCharacter should either be
             // Resources.Load<GameObject>("prefabs/characterbodies/BanditBody");
             // or BodyCatalog.FindBodyIndex("BanditBody");
@@ -64,7 +69,7 @@ namespace EngiEngi
             //  mySkillDef.shootDelay = 0.5f;
             mySkillDef.stockToConsume = 1;
             // mySkillDef.icon = Resources.Load<Sprite>("NotAnActualPath");
-            mySkillDef.skillDescriptionToken = "fire wrenches that deal increased damage to shields";
+            mySkillDef.skillDescriptionToken = "fire wrenches that deal increased damage to shields and upgrades your turrets";
             mySkillDef.skillName = "WrenchSkill";
             mySkillDef.skillNameToken = "Wrench";
 
@@ -102,18 +107,24 @@ namespace EngiEngi
             //    viewableNode = new ViewablesCatalog.Node(mySkillDef.skillNameToken, false, null)
             //};
 
-            //On.RoR2.CharacterMaster.AddDeployable += AddBATComponentOnAddDeployableHook;
-            EngiEgni.Modules.WrenchProjectile.CreateProjectile();
+           
+            EngiEgni.Modules.WrenchProjectile.CreateProjectile(logger);
         }
-
+        private void Start()
+        {
+            On.RoR2.CharacterMaster.AddDeployable += AddBATComponentOnAddDeployableHook;
+            
+        }
         private static void AddBATComponentOnAddDeployableHook(On.RoR2.CharacterMaster.orig_AddDeployable orig, CharacterMaster self, Deployable deployable, DeployableSlot slot)
         {
+            logger.LogMessage("Hook called, attempting AddComponent on engineer turrert");
             orig(self, deployable, slot);
 
             if (slot == DeployableSlot.EngiTurret)
             {
                var Engiturret = deployable.gameObject.AddComponent(typeof(EngiEgni.Modules.UpgradeTurretComp));
-                
+                logger.LogMessage("Hook complete, engineer turret should have the component");
+                logger.LogMessage($"{Engiturret.GetComponent<EngiEgni.Modules.UpgradeTurretComp>().name}");
             }
         }
     }
