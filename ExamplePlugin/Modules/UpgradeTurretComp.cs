@@ -48,24 +48,52 @@ namespace EngiEgni.Modules
 
         private void Awake()
         {
-            thisTurret = this.gameObject.GetComponent<CharacterBody>();
+           
             //thisTurretAIRange = EntityStates.Engi.EngiWeapon.PlaceTurret.turretRadius;
             turretTier = 1;
             TestValues();
 
         }
-        private void Update()
+        void StoreStuffBCimlazy()
         {
-           
-
-            if(thisTotalBuffStacks >= requiredStacksTier2)
+            if (thisTotalBuffStacks < 2)
             {
-                UpgradeTurret(turretTier);
+                thisTurret.name = "Engineer turret T1";
             }
         }
+        public void AssignCB(CharacterBody turretPrefab)
+        {
+            if(thisTurret == null)
+            {
+                thisTurret = turretPrefab;
+
+            }
+        }
+
         public void addBuffAndUpdateInt()
         {
-            Chat.AddMessage("ping");
+            if (turretTier < 2)
+            {
+               
+                if (thisTotalBuffStacks == requiredStacksTier2 || thisTotalBuffStacks !> requiredStacksTier2 + 1)
+                {
+                    turretTier = 2;
+                    UpgradeTurret(turretTier);
+                    return;
+                }
+            }
+           if(turretTier == 2)
+            {
+                if (thisTotalBuffStacks == requiredStacksTier3 || thisTotalBuffStacks !> requiredStacksTier3 + 1)
+                {
+                    turretTier = 3;
+                    UpgradeTurret(turretTier);
+                    return;
+                }
+            }
+          
+
+
 
             if (turretTier == 1)
             {
@@ -82,9 +110,8 @@ namespace EngiEgni.Modules
             if(turretTier < 3)
             {
                 thisTotalBuffStacks++;
-
+               //thisTurret.AddTimedBuff(Buffs.enhancementBuff, 2, maxtstacks);
             }
-            // thisTurret.AddTimedBuff(Buffs.enhancementBuff, 2, maxtstacks);
         }
         private void UpgradeTurret(int tier)
         {
@@ -97,6 +124,7 @@ namespace EngiEgni.Modules
                 thisTurret.radius *= rangeIncrease;
 
                 //boss damage increase
+                
                 thisTotalBuffStacks = 0;
             }
             if(turretTier == 3)
@@ -110,6 +138,7 @@ namespace EngiEgni.Modules
                 thisTotalBuffStacks = 0;
 
             }
+            thisTurret.RecalculateStats();
         }
 
     }
