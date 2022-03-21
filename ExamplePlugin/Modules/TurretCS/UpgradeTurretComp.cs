@@ -16,7 +16,9 @@ namespace EngiEgni.Modules
     class UpgradeTurretComp : MonoBehaviour
     {
         private CharacterBody thisTurret;
-        
+
+        private TurretClasses turretClass;
+        int turretClassIndex;
        // private float thisTurretAIRange;
 
         public int thisTotalBuffStacks;
