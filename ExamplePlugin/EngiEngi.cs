@@ -15,15 +15,16 @@ namespace EngiEngi
         "com.JammingEnd.EngiEngi",
         "EngiestEngineer",
         "1.0.0")]
-    [R2APISubmoduleDependency(nameof(LoadoutAPI), nameof(SurvivorAPI), nameof(LanguageAPI))]
+    [R2APISubmoduleDependency(nameof(LoadoutAPI), nameof(SurvivorAPI), nameof(LanguageAPI),nameof(PrefabAPI))]
     public class AdditionalSkill : BaseUnityPlugin
     {
         public static ManualLogSource logger;
 
-        public void Awake()
+        public void Start()
         {
             logger = base.Logger;
-
+            logger.LogMessage("mod created");
+            iniHooks();
             // myCharacter should either be
             // Resources.Load<GameObject>("prefabs/characterbodies/BanditBody");
             // or BodyCatalog.FindBodyIndex("BanditBody");
@@ -110,10 +111,11 @@ namespace EngiEngi
            
             EngiEgni.Modules.WrenchProjectile.CreateProjectile(logger);
         }
-        private void Start()
+        private void iniHooks()
         {
+            logger.LogMessage("creating hooks");
             On.RoR2.CharacterMaster.AddDeployable += AddBATComponentOnAddDeployableHook;
-            
+           
         }
         private static void AddBATComponentOnAddDeployableHook(On.RoR2.CharacterMaster.orig_AddDeployable orig, CharacterMaster self, Deployable deployable, DeployableSlot slot)
         {
@@ -125,6 +127,7 @@ namespace EngiEngi
                var Engiturret = deployable.gameObject.AddComponent(typeof(EngiEgni.Modules.UpgradeTurretComp));
                 logger.LogMessage("Hook complete, engineer turret should have the component");
                 logger.LogMessage($"{Engiturret.GetComponent<EngiEgni.Modules.UpgradeTurretComp>().name}");
+
             }
         }
     }

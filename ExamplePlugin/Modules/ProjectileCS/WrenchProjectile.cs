@@ -19,7 +19,7 @@ namespace EngiEgni.Modules
 
         private static void CreateWrench()
         {
-            wrenchPrefab = ClonePrefab("testStuff", "EngineerWrench"); //add prefab
+            wrenchPrefab = ClonePrefab("CommandoGrenadeProjectile", "EngineerWrench"); //add prefab
             Object.Destroy(wrenchPrefab.GetComponent<ProjectileExplosion>());
             wrenchPrefab.AddComponent<ProjectileSingleTargetImpact>();
             On.RoR2.Projectile.ProjectileSingleTargetImpact.OnProjectileImpact += ProjectileSingleTargetImpact_OnProjectileImpact;
@@ -54,7 +54,6 @@ namespace EngiEgni.Modules
 
                     }
 
-                    logger.LogMessage($"you did damage");
                     if (hurtbox.healthComponent.shield > 0)
                     {
 
@@ -73,7 +72,8 @@ namespace EngiEgni.Modules
 
         private static GameObject ClonePrefab(string prefabName, string newPrefabName)
         {
-            GameObject newPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/" + prefabName), newPrefabName);
+            GameObject newPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/Projectiles/" + prefabName), newPrefabName);
+            newPrefab.GetComponent<ProjectileDamage>().damage *= 0.1f;
             return newPrefab;
         }
     }

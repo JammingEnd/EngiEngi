@@ -13,7 +13,7 @@ namespace EngiEgni.Modules
 {
    
 
-    class UpgradeTurretComp : MonoBehaviour
+    class UpgradeTurretComp : MonoBehaviour 
     {
         private CharacterBody thisTurret;
 
@@ -142,6 +142,9 @@ namespace EngiEgni.Modules
             }
             thisTurret.RecalculateStats();
         }
+        void AssignClass()
+        {
 
+        }
     }
 }
